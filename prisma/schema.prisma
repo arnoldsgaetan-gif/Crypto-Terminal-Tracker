@@ -1,1 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Vault utilisateur (seeds chiffrées) ─────────────────────────────────────
+model UserVault {
+  id                String   @id @default(cuid())
+  clerkUserId       String   @unique
+  encryptedMnemonic String?
+  encryptedPrivKeys Json?    // { "btc": "enc...", "eth": "enc..." }
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// ── Portfolio (positions ouvertes) ──────────────────────────────────────────
+model Position {
+  id           String       @id @default(cuid())
+  clerkUserId  String
+  symbol       String
+  asset        String
+  type         PositionType
+  quantity     Float
+  entryPrice   Float
+  currentPrice Float        @default(0)
+  pnl          Float        @default(0)
+  pnlPercent   Float        @default(0)
+  isOpen       Boolean      @default(true)
+  openedAt     DateTime     @default(now())
+  closedAt     DateTime?
+  updatedAt    DateTime     @updatedAt
+
+  @@index([clerkUserId])
+}
+
+// ── Journal de trading ──────────────────────────────────────────────────────
+model Trade {
+  id          String    @id @default(cuid())
+  clerkUserId String
+  symbol      String
+  direction   Direction
+  result      Float     // P&L en USD
+  rr          Float?    // Risk/Reward réalisé
+  note        String?
+  screenshot  String?   // URL screenshot
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([clerkUserId])
+  @@index([createdAt])
+}
+
+// ── Transactions vault (dépôts / retraits) ──────────────────────────────────
+model VaultTransaction {
+  id          String          @id @default(cuid())
+  clerkUserId String
+  asset       String
+  amount      Float
+  type        TransactionType
+  createdAt   DateTime        @default(now())
+
+  @@index([clerkUserId])
+}
+
+enum PositionType {
+  Spot
+  Futures
+  Forex
+}
+
+enum Direction {
+  LONG
+  SHORT
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAW
+}
 
