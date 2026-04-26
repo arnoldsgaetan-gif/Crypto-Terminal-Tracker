@@ -1,0 +1,21 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "portfolio": "Portfolio",
+    "trading": "Trading",
+    "journal": "Journal"
+  },
+  "vault": {
+    "title": "Coffre-fort sécurisé",
+    "deposit": "Déposer",
+    "withdraw": "Retirer",
+    "asset": "Actif",
+    "amount": "Montant",
+    "footer": "Les transactions sont enregistrées dans votre journal"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "logout": "Déconnexion",
+    "signup": "Commencer gratuitement"
+  }
+}
