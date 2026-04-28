@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { symbol, asset, type, quantity, entryPrice } = body;
 
-  if (!symbol  !asset  !type  !quantity  !entryPrice) {
+  if (!symbol || !asset || !type || !quantity || !entryPrice) {
     return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
   }
 
