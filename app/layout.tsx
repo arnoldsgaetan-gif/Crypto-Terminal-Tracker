@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,23 +29,6 @@ export default function RootLayout({
               enableSystem={false}
               disableTransitionOnChange
             >
-              {children}
-            </ThemeProvider>
-          </NextIntlClientProvider>
-        </body>
-      </html>
-    </ClerkProvider>
-  );
-}
-import { Analytics } from "@vercel/analytics/next";
-
-export default function RootLayout({...}) {
-  return (
-    <ClerkProvider>
-      <html lang="fr" suppressHydrationWarning>
-        <body className={inter.className}>
-          <NextIntlClientProvider locale="fr">
-            <ThemeProvider {...}>
               {children}
             </ThemeProvider>
           </NextIntlClientProvider>
