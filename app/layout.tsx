@@ -36,3 +36,21 @@ export default function RootLayout({
     </ClerkProvider>
   );
 }
+import { Analytics } from "@vercel/analytics/next";
+
+export default function RootLayout({...}) {
+  return (
+    <ClerkProvider>
+      <html lang="fr" suppressHydrationWarning>
+        <body className={inter.className}>
+          <NextIntlClientProvider locale="fr">
+            <ThemeProvider {...}>
+              {children}
+            </ThemeProvider>
+          </NextIntlClientProvider>
+          <Analytics />
+        </body>
+      </html>
+    </ClerkProvider>
+  );
+}
