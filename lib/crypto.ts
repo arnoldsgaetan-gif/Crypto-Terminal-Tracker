@@ -3,10 +3,10 @@
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-function getSalt(): Uint8Array {
+function getSalt(): ArrayBuffer {
   const salt =
     process.env.NEXT_PUBLIC_ENCRYPTION_SALT ?? "crypto-terminal-salt-2026";
-  return encoder.encode(salt);
+  return encoder.encode(salt).buffer as ArrayBuffer;
 }
 
 async function deriveKey(
@@ -15,7 +15,7 @@ async function deriveKey(
 ): Promise<CryptoKey> {
   const keyMaterial = await crypto.subtle.importKey(
     "raw",
-    encoder.encode(masterPassword),
+    encoder.encode(masterPassword).buffer as ArrayBuffer,
     { name: "PBKDF2" },
     false,
     ["deriveKey"]
@@ -35,10 +35,6 @@ async function deriveKey(
   );
 }
 
-/**
- * Chiffre une chaîne avec AES-GCM + PBKDF2 (600k itérations)
- * Retourne une string base64 contenant IV + données chiffrées
- */
 export async function encryptData(
   data: string,
   masterPassword: string
@@ -49,7 +45,7 @@ export async function encryptData(
   const encrypted = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv },
     key,
-    encoder.encode(data)
+    encoder.encode(data).buffer as ArrayBuffer
   );
 
   const combined = new Uint8Array(iv.length + encrypted.byteLength);
@@ -59,9 +55,6 @@ export async function encryptData(
   return btoa(String.fromCharCode(...combined));
 }
 
-/**
- * Déchiffre une string base64 générée par encryptData
- */
 export async function decryptData(
   encryptedBase64: string,
   masterPassword: string
@@ -78,7 +71,7 @@ export async function decryptData(
   const decrypted = await crypto.subtle.decrypt(
     { name: "AES-GCM", iv },
     key,
-    encrypted
+    encrypted.buffer as ArrayBuffer
   );
 
   return decoder.decode(decrypted);
