@@ -23,10 +23,10 @@ async function deriveKey(
 
   return crypto.subtle.deriveKey(
     {
-      function getSalt(): Uint8Array {
-  const salt = process.env.NEXT_PUBLIC_ENCRYPTION_SALT ?? "crypto-terminal-salt-2026";
-  return encoder.encode(salt);
-}
+      name: "PBKDF2",
+      salt: getSalt(),
+      iterations: 100000,
+      hash: "SHA-256",
     },
     keyMaterial,
     { name: "AES-GCM", length: 256 },
